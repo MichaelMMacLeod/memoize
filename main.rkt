@@ -1,14 +1,14 @@
 #lang racket/base
 
 (provide define/memoize)
-  
-(define-syntax-rule (define/memoize (name arg) body)
+
+(define-syntax-rule (define/memoize (name arg ...) body ...)
   (define name
     (let* ([memory (make-hash)]
-           [name (lambda (arg)
-                   (unless (hash-ref memory arg #f)
-                     (hash-set! memory arg body))
-                   (hash-ref memory arg))])
+           [name (lambda (arg ...)
+                   (unless (hash-ref memory (list arg ...) #f)
+                     (hash-set! memory (list arg ...) (begin body ...)))
+                   (hash-ref memory (list arg ...)))])
       name)))
 
 (module+ test
