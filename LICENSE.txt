@@ -1,5 +1,6 @@
 memoize
-Copyright (c) 2018 michael
+
+Copyright (c) 2018 Michael MacLeod
 
 This package is distributed under the GNU Lesser General Public
 License (LGPL).  This means that you can link memoize into proprietary
