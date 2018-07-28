@@ -12,14 +12,19 @@
                         (hash-set! memory (list args ...) (begin body ...)))
                       (hash-ref memory (list args ...)))])
          name))]
-    [(define/memoize (name . rest) body ...)
+    [(define/memoize (name args ... . rest) body ...)
      (define name
        (let* ([memory (make-hash)]
-              [name (lambda rest
-                      (unless (hash-ref memory rest #f)
-                        (hash-set! memory rest (begin body ...)))
-                      (hash-ref memory rest))])
+              [name (lambda (args ... rest)
+                      (unless (hash-ref memory (args ... rest) #f)
+                        (hash-set! memory (args ... rest) (begin body ...)))
+                      (hash-ref memory (args ... rest)))])
          name))]))
+
+(define/memoize (f a b c . xs)
+  (sleep 1)
+  (apply * (append (list a b c)
+                   xs)))
 
 (module+ test
   (require rackunit))
