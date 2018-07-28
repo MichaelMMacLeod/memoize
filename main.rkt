@@ -11,6 +11,14 @@
                       (unless (hash-ref memory (list args ...) #f)
                         (hash-set! memory (list args ...) (begin body ...)))
                       (hash-ref memory (list args ...)))])
+         name))]
+    [(define/memoize (name . rest) body ...)
+     (define name
+       (let* ([memory (make-hash)]
+              [name (lambda rest
+                      (unless (hash-ref memory rest #f)
+                        (hash-set! memory rest (begin body ...)))
+                      (hash-ref memory rest))])
          name))]))
 
 (module+ test
