@@ -2,14 +2,16 @@
 
 (provide define/memoize)
 
-(define-syntax-rule (define/memoize (name arg ...) body ...)
-  (define name
-    (let* ([memory (make-hash)]
-           [name (lambda (arg ...)
-                   (unless (hash-ref memory (list arg ...) #f)
-                     (hash-set! memory (list arg ...) (begin body ...)))
-                   (hash-ref memory (list arg ...)))])
-      name)))
+(define-syntax define/memoize
+  (syntax-rules ()
+    [(define/memoize (name args ...) body ...)
+     (define name
+       (let* ([memory (make-hash)]
+              [name (lambda (args ...)
+                      (unless (hash-ref memory (list args ...) #f)
+                        (hash-set! memory (list args ...) (begin body ...)))
+                      (hash-ref memory (list args ...)))])
+         name))]))
 
 (module+ test
   (require rackunit))
